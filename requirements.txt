@@ -2,3 +2,5 @@ fastapi
 uvicorn
 pydantic
 kokoro
+soundfile
+python-espeak
