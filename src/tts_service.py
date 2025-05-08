@@ -1,44 +1,36 @@
-import uuid
 import os
+import uuid
 import asyncio
 from concurrent.futures import ProcessPoolExecutor
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
-from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from ttsEngines.ttsManager import get_tts_engines
 
-# FastAPI setup
-app = FastAPI()
-
-
-@app.get("/")
-async def read_index():
-    return FileResponse("static/index.html")
-
-
-@app.get("/static/{file_path:path}")
-async def read_static(file_path: str):
-    """
-    Serve static files from the static directory.
-    """
-    file_path = os.path.join("static", file_path)
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="File not found")
-    return FileResponse(file_path)
-
+# Import history manager to add items to history
+import history_manager
 
 # Directory to store generated audio files
 OUTPUT_DIR = "tts_outputs"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-
 # Map engine identifiers to classes
 TTS_ENGINES = get_tts_engines()
 
+# Create a process pool executor
+executor = ProcessPoolExecutor(max_workers=os.cpu_count())
 
-# Job function executed in worker processes
+# Task tracking
+tasks = {}  # id -> Future
+
+# Create router for TTS endpoints
+router = APIRouter(prefix="/tts", tags=["tts"])
+
+
 def synthesize_job(tts_type: str, text: str, output_path: str) -> str:
+    """
+    Job function executed in worker processes
+    """
     engine_cls = TTS_ENGINES.get(tts_type)
     if not engine_cls:
         raise ValueError(f"Unknown TTS engine: {tts_type}")
@@ -47,41 +39,77 @@ def synthesize_job(tts_type: str, text: str, output_path: str) -> str:
     return output_path
 
 
-executor = ProcessPoolExecutor(max_workers=os.cpu_count())
-
-# Task tracking
-tasks = {}  # id -> Future
-
-
-@app.get("/tts/engines")
-async def get_engines():
+def get_available_engines():
     """
     Returns a list of available TTS engines.
     """
     return list(TTS_ENGINES.keys())
 
 
+def get_output_path(job_id):
+    """
+    Returns the output path for a job
+    """
+    return os.path.join(OUTPUT_DIR, f"{job_id}.wav")
+
+
+def generate_job_id():
+    """
+    Generate a unique job ID
+    """
+    return str(uuid.uuid4())
+
+
+def delete_tts_file(job_id):
+    """
+    Delete a TTS file by job ID
+    """
+    output_path = get_output_path(job_id)
+    if os.path.exists(output_path):
+        os.remove(output_path)
+        return True
+    return False
+
+
+# TTS API endpoint models
 class TTSRequest(BaseModel):
     text: str
     engine: str
 
 
-@app.post("/tts/")
+# TTS API endpoints
+@router.get("/engines")
+async def get_engines_endpoint():
+    """
+    Returns a list of available TTS engines.
+    """
+    return get_available_engines()
+
+
+@router.post("/")
 async def tts_request(request: TTSRequest):
     text = request.text
     engine = request.engine
-    if engine not in TTS_ENGINES:
+
+    available_engines = get_available_engines()
+    if engine not in available_engines:
         raise HTTPException(status_code=400, detail="Unsupported TTS engine")
-    job_id = str(uuid.uuid4())
-    output_path = os.path.join(OUTPUT_DIR, f"{job_id}.wav")
+
+    job_id = generate_job_id()
+    output_path = get_output_path(job_id)
+
     # Submit to process pool
     loop = asyncio.get_event_loop()
     future = loop.run_in_executor(executor, synthesize_job, engine, text, output_path)
     tasks[job_id] = future
-    return {"job_id": job_id}
+
+    # Add to history
+    history_item = history_manager.add_to_history(job_id, text, engine)
+
+    return {"job_id": job_id, "history_item": history_item}
 
 
-@app.get("/tts/{job_id}/status")
+@router.get("/{job_id}/status")
 async def tts_status(job_id: str):
     future = tasks.get(job_id)
     if not future:
@@ -96,14 +124,15 @@ async def tts_status(job_id: str):
     return {"status": "pending"}
 
 
-@app.get("/tts/{job_id}/download")
+@router.get("/{job_id}/download")
 async def tts_download(job_id: str):
     future = tasks.get(job_id)
     if not future:
         raise HTTPException(status_code=404, detail="Job ID not found")
     if not future.done():
         raise HTTPException(status_code=400, detail="Job not finished yet")
-    output_path = os.path.join(OUTPUT_DIR, f"{job_id}.wav")
+
+    output_path = get_output_path(job_id)
     if not os.path.exists(output_path):
         raise HTTPException(status_code=500, detail="Output file missing")
 
@@ -112,3 +141,15 @@ async def tts_download(job_id: str):
             yield from f
 
     return StreamingResponse(iterfile(), media_type="audio/wav")
+
+
+@router.delete("/{job_id}/delete")
+async def delete_tts_file_endpoint(job_id: str):
+    """Delete a TTS file by job ID"""
+    if delete_tts_file(job_id):
+        # Also delete from history
+        result = history_manager.delete_history_item(job_id)
+        if result:
+            return result
+
+    raise HTTPException(status_code=404, detail="File not found")

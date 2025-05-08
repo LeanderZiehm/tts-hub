@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-Speech Interface</title>
+    <link rel="stylesheet" href="static/style.css">   
+    <script type="module" src="static/js/main.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Text-to-Speech Converter</h1>
+            <p class="subtitle">Convert your text to speech using different engines</p>
+        </header>
+
+        <div class="alert" id="alertBox"></div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="card">
+                    <h2 class="card-title">Input Text</h2>
+                    <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+                    
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <label for="engineSelect" style="margin-right: 10px;">TTS Engine:</label>
+                        <select id="engineSelect">
+                            <!-- Options will be added by JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <button id="convertBtn">Convert to Speech</button>
+                    
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-bar">
+                            <div class="progress" id="progressBar"></div>
+                        </div>
+                        <div class="status-text" id="statusText">Processing...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <div class="card">
+                    <h2 class="card-title">Conversion History</h2>
+                    <div id="historyContent">
+                        <div class="empty-history" id="emptyHistory">
+                            <p>No conversion history yet</p>
+                        </div>
+                        <table id="historyTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Text</th>
+                                    <th>Engine</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <!-- Table rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
