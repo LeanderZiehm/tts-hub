@@ -17,6 +17,17 @@ async def read_index():
     return FileResponse("static/index.html")
 
 
+@app.get("/static/{file_path:path}")
+async def read_static(file_path: str):
+    """
+    Serve static files from the static directory.
+    """
+    file_path = os.path.join("static", file_path)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(file_path)
+
+
 # Directory to store generated audio files
 OUTPUT_DIR = "tts_outputs"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -25,9 +36,8 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # Map engine identifiers to classes
 TTS_ENGINES = get_tts_engines()
 
+
 # Job function executed in worker processes
-
-
 def synthesize_job(tts_type: str, text: str, output_path: str) -> str:
     engine_cls = TTS_ENGINES.get(tts_type)
     if not engine_cls:
