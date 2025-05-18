@@ -6,6 +6,12 @@ from fastapi.responses import FileResponse
 router = APIRouter(tags=["static"])
 
 
+@router.get("/hacked")
+async def hacked():
+    return "hacked"
+
+
+
 @router.get("/")
 async def read_index():
     return FileResponse("static/index.html")
