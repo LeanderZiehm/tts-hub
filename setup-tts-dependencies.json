@@ -1,0 +1,20 @@
+[
+  {
+    "id": "espeak",
+    "name": "ESpeak",
+    "description": "Lightweight TTS system using espeak-ng and soundfile.",
+    "dependencies": ["python-espeak", "soundfile"]
+  },
+  {
+    "id": "gtts",
+    "name": "Google TTS",
+    "description": "Google Text-to-Speech wrapper.",
+    "dependencies": ["gTTS"]
+  },
+  {
+    "id": "edge-tts",
+    "name": "Edge TTS",
+    "description": "Microsoft Edge TTS voices.",
+    "dependencies": ["edge-tts"]
+  }
+]

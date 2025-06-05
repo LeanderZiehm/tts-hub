@@ -13,7 +13,11 @@ app.include_router(static_routes.router)
 app.include_router(history_manager.router)
 app.include_router(tts_service.router)
 
-if __name__ == "__main__":
+def main():
     import uvicorn
-
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
+if __name__ == "__main__":
+    main()
+

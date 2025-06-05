@@ -11,10 +11,10 @@ class AbstractTTSEngine(ABC):
         pass
 
 
-from ttsEngines.gttsEngine import GTTSTTS
+# from ttsEngines.gttsEngine import GTTSTTS
 from ttsEngines.espeakEngine import EspeakTTS
-from ttsEngines.piperEngine import PiperTTS
-from ttsEngines.kokoroEngine import KokoroTTS
+# from ttsEngines.piperEngine import PiperTTS
+# from ttsEngines.kokoroEngine import KokoroTTS
 
 
 def get_tts_engines():
@@ -26,7 +26,7 @@ def get_tts_engines():
     """
     return {
         "espeak": EspeakTTS,
-        "gtts": GTTSTTS,
-        "piper": PiperTTS,
-        "kokoro": KokoroTTS,
+        # "gtts": GTTSTTS,
+        # "piper": PiperTTS,
+        # "kokoro": KokoroTTS,
     }
