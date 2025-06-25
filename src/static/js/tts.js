@@ -10,6 +10,8 @@ let convertBtn;
 let progressContainer;
 let progressBar;
 let statusText;
+let autoDownloadToggle;
+
 
 // Initialize the TTS module
 function initTTS() {
@@ -20,6 +22,7 @@ function initTTS() {
     progressContainer = document.getElementById('progressContainer');
     progressBar = document.getElementById('progressBar');
     statusText = document.getElementById('statusText');
+    autoDownloadToggle = document.getElementById('autoDownloadToggle');
     
     // Load available TTS engines
     loadAndDisplayTTSEngines();
@@ -107,6 +110,10 @@ function pollConversionStatus(jobId, text, engine) {
                     // Add to history
                     addToHistory(jobId, text, engine);
                     
+       
+
+   if (autoDownloadToggle.checked) {
+    console.log("toggle is checked")
                     // Auto download
                     setTimeout(() => {
                         downloadFile(jobId);
@@ -117,6 +124,7 @@ function pollConversionStatus(jobId, text, engine) {
                             convertBtn.disabled = false;
                         }, 1000);
                     }, 500);
+                }
                     
                 } else if (statusData.status === 'error') {
                     clearInterval(checkStatus);

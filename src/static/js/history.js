@@ -67,20 +67,24 @@ function updateHistoryDisplay(history) {
     history.forEach((item) => {
         const row = document.createElement('tr');
         
+        console.log(item.text);
         // Truncate text for display
-        const displayText = item.text.length > 30 
-            ? item.text.substring(0, 30) + '...' 
-            : item.text;
+        const trimmedText = item.text.trim();
+        const displayText = trimmedText.length > 30 
+            ? trimmedText.substring(0, 30) + '...' 
+            : trimmedText;
         
         // Format timestamp
+        console.log(item.timestamp);
+
         const timestamp = new Date(parseFloat(item.timestamp) * 1000).toLocaleString();
-        
+
         row.innerHTML = `
-            <td title="${item.text}">${displayText}</td>
+            <td title="${trimmedText}">${displayText}</td>
             <td>${item.engine}</td>
             <td>${timestamp}</td>
             <td class="history-actions">
-                <button class="download-btn" data-id="${item.jobId}">Download</button>
+                <button class="download-btn" data-id="${item.jobId}" data-name="${displayText}">Download</button>
                 <button class="delete-btn" data-id="${item.jobId}">Delete</button>
             </td>
         `;
@@ -92,10 +96,10 @@ function updateHistoryDisplay(history) {
     document.querySelectorAll('.download-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const jobId = e.target.getAttribute('data-id');
-            downloadFile(jobId);
+            const fileName = e.target.getAttribute('data-name');
+            downloadFile(jobId, fileName);
         });
     });
-    
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const jobId = e.target.getAttribute('data-id');
@@ -151,10 +155,10 @@ function clearHistory() {
 }
 
 // Download file
-function downloadFile(jobId) {
+function downloadFile(jobId,fileName) {
     const link = document.createElement('a');
     link.href = `/tts/${jobId}/download`;
-    link.download = `tts_${jobId}.wav`; // Set a default filename
+    link.download = `${fileName}.wav`; // Set a default filename
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

@@ -2,6 +2,7 @@ import os
 import json
 import asyncio
 from fastapi import APIRouter, HTTPException
+import time
 
 # Path for history storage
 HISTORY_FILE = "tts_history.json"
@@ -32,7 +33,7 @@ def add_to_history(job_id, text, engine):
         "jobId": job_id,
         "text": text,
         "engine": engine,
-        "timestamp": str(asyncio.get_event_loop().time()),
+        "timestamp": str(time.time())
     }
 
     history.insert(0, history_item)  # Add to beginning
