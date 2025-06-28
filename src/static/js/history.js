@@ -1,5 +1,7 @@
 // history.js - Manages conversion history functionality by interacting with the backend API
 
+const FILE_NAME_TEXT_LENGTH = 80
+
 // DOM Elements
 let historyTable;
 let historyTableBody;
@@ -70,8 +72,8 @@ function updateHistoryDisplay(history) {
         console.log(item.text);
         // Truncate text for display
         const trimmedText = item.text.trim();
-        const displayText = trimmedText.length > 30 
-            ? trimmedText.substring(0, 30) + '...' 
+        const displayText = trimmedText.length > FILE_NAME_TEXT_LENGTH 
+            ? trimmedText.substring(0, FILE_NAME_TEXT_LENGTH) + '...' 
             : trimmedText;
         
         // Format timestamp
