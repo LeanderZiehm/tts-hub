@@ -1,5 +1,5 @@
 // history.js - Manages conversion history functionality by interacting with the backend API
-
+console.log("history.js 28.06.2025 1:19PM");
 const FILE_NAME_TEXT_LENGTH = 80
 
 // DOM Elements
@@ -158,6 +158,7 @@ function clearHistory() {
 
 // Download file
 function downloadFile(jobId,fileName) {
+    console.log(`downloadFile was triggered with filename: ${fileName} and jobId: ${jobId} trace back the path where it was called from: ${new Error().stack}`);
     const link = document.createElement('a');
     link.href = `/tts/${jobId}/download`;
     link.download = `${fileName}.wav`; // Set a default filename

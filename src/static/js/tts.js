@@ -1,5 +1,5 @@
 // tts.js - Handles all text-to-speech conversion functionality
-
+console.log("tts.js 28.06.2025 1:19PM");
 // Import functions from history module
 import { addToHistory, showAlert, downloadFile } from './history.js';
 
@@ -23,6 +23,9 @@ function initTTS() {
     progressBar = document.getElementById('progressBar');
     statusText = document.getElementById('statusText');
     autoDownloadToggle = document.getElementById('autoDownloadToggle');
+    console.log('▶︎ autoDownloadToggle is:', autoDownloadToggle);
+console.log('▶︎ autoDownloadToggle.checked is:', autoDownloadToggle?.checked);
+
     
     // Load available TTS engines
     loadAndDisplayTTSEngines();
@@ -111,11 +114,14 @@ function pollConversionStatus(jobId, text, engine) {
                     addToHistory(jobId, text, engine);
                     
        
+console.log('▶︎2 autoDownloadToggle is:', autoDownloadToggle);
+console.log('▶︎2 autoDownloadToggle.checked is:', autoDownloadToggle?.checked);
 
    if (autoDownloadToggle.checked) {
     console.log("toggle is checked")
                     // Auto download
                     setTimeout(() => {
+                        console.log("download triggered through setTimeout")
                         downloadFile(jobId);
                         
                         // Reset UI
