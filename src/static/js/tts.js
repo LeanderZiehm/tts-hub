@@ -1,5 +1,5 @@
 // tts.js - Handles all text-to-speech conversion functionality
-console.log("tts.js 28.06.2025 1:19PM");
+console.log("tts.js 29.06.2025 v1");
 // Import functions from history module
 import { addToHistory, showAlert, downloadFile } from './history.js';
 
@@ -109,6 +109,9 @@ function pollConversionStatus(jobId, text, engine) {
                     clearInterval(checkStatus);
                     progressBar.style.width = '100%';
                     statusText.textContent = 'Conversion complete!';
+                    //remove text from input area
+                    textInput.value = '';
+                
                     
                     // Add to history
                     addToHistory(jobId, text, engine);
@@ -118,7 +121,7 @@ console.log('▶︎2 autoDownloadToggle is:', autoDownloadToggle);
 console.log('▶︎2 autoDownloadToggle.checked is:', autoDownloadToggle?.checked);
 
    if (autoDownloadToggle.checked) {
-    console.log("toggle is checked")
+    // console.log("toggle is checked")
                     // Auto download
                     setTimeout(() => {
                         console.log("download triggered through setTimeout")

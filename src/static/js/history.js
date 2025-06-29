@@ -1,5 +1,5 @@
 // history.js - Manages conversion history functionality by interacting with the backend API
-console.log("history.js 28.06.2025 1:19PM");
+console.log("history.js 29.06.2025 v1");
 const FILE_NAME_TEXT_LENGTH = 80
 
 // DOM Elements
@@ -69,7 +69,7 @@ function updateHistoryDisplay(history) {
     history.forEach((item) => {
         const row = document.createElement('tr');
         
-        console.log(item.text);
+        // console.log(item.text);
         // Truncate text for display
         const trimmedText = item.text.trim();
         const displayText = trimmedText.length > FILE_NAME_TEXT_LENGTH 
@@ -77,7 +77,7 @@ function updateHistoryDisplay(history) {
             : trimmedText;
         
         // Format timestamp
-        console.log(item.timestamp);
+        // console.log(item.timestamp);
 
         const timestamp = new Date(parseFloat(item.timestamp) * 1000).toLocaleString();
 
@@ -95,13 +95,18 @@ function updateHistoryDisplay(history) {
     });
     
     // Add event listeners to buttons
-    document.querySelectorAll('.download-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const jobId = e.target.getAttribute('data-id');
-            const fileName = e.target.getAttribute('data-name');
-            downloadFile(jobId, fileName);
-        });
+// Add event listeners to buttons
+document.querySelectorAll('.download-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const jobId = e.target.getAttribute('data-id');
+        const fileName = e.target.getAttribute('data-name');
+        downloadFile(jobId, fileName);
+
+        // Change button style on click
+        e.target.classList.add('clicked');
     });
+});
+
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const jobId = e.target.getAttribute('data-id');
@@ -158,7 +163,7 @@ function clearHistory() {
 
 // Download file
 function downloadFile(jobId,fileName) {
-    console.log(`downloadFile was triggered with filename: ${fileName} and jobId: ${jobId} trace back the path where it was called from: ${new Error().stack}`);
+    // console.log(`downloadFile was triggered with filename: ${fileName} and jobId: ${jobId} trace back the path where it was called from: ${new Error().stack}`);
     const link = document.createElement('a');
     link.href = `/tts/${jobId}/download`;
     link.download = `${fileName}.wav`; // Set a default filename

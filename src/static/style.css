@@ -131,6 +131,12 @@ button:disabled {
 .download-btn:hover {
     background-color: #39a067;
 }
+.download-btn.clicked {
+  background-color: transparent !important;
+  color: black !important;
+  border: 2px solid green !important;
+}
+
 
 .progress-container {
     margin-top: 1rem;
