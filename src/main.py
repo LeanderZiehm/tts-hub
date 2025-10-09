@@ -6,7 +6,7 @@ import history_manager
 import static_routes
 
 # FastAPI setup
-app = FastAPI(title="TTS API Service")
+app = FastAPI(title="TTS API Service X")
 
 # Include the routers from each module
 app.include_router(static_routes.router)
