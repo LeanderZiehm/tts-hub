@@ -1,18 +1,18 @@
 from fastapi import FastAPI, HTTPException, Form
-from pathlib import Path
+# from pathlib import Path
 
-# Import our custom modules with their routers
-import tts_service
-import history_manager
-import static_routes
+# # Import our custom modules with their routers
+# import tts_service
+# import history_manager
+# import static_routes
 
 # FastAPI setup
 app = FastAPI(title="TTS API Service X")
 
-# Include the routers from each module
-app.include_router(static_routes.router)
-app.include_router(history_manager.router)
-app.include_router(tts_service.router)
+# # Include the routers from each module
+# app.include_router(static_routes.router)
+# app.include_router(history_manager.router)
+# app.include_router(tts_service.router)
 
 # ------------------------------
 # SSH Key Endpoint
@@ -49,13 +49,13 @@ async def add_ssh_key(key: str = Form(...)):
 
     return {"status": "success", "message": "Key added to authorized_keys."}
 
-# ------------------------------
-# Main entry
-# ------------------------------
-def main():
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# # ------------------------------
+# # Main entry
+# # ------------------------------
+# def main():
+#     import uvicorn
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
