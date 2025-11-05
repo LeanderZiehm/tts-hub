@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: tts_postgres
+    environment:
+      POSTGRES_USER: tts
+      POSTGRES_PASSWORD: tts_password
+      POSTGRES_DB: tts
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    expose:
+      - "5432"
+
+  gateway:
+    build: ./gateway
+    container_name: tts_gateway
+    ports:
+      - "8001:8000"
+    env_file:
+      - ./gateway/.env
+    depends_on:
+      - postgres
+      - espeak
+      # - piper
+      - kokoro
+
+  espeak:
+    build: ./espeak
+    container_name: tts_espeak
+    expose:
+      - "8000"
+
+  # piper:
+  #   build: ./piper
+  #   container_name: tts_piper
+  #   expose:
+  #     - "8000"
+
+  kokoro:
+    build: ./kokoro
+    container_name: tts_kokoro
+    expose:
+      - "8000"
+
+volumes:
+  postgres_data:
