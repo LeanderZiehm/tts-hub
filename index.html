@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TTS Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            max-width: 720px;
+        }
+        label {
+            font-weight: 600;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+        }
+        select, input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .audio-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Text to Speech Gateway Client</h2>
+
+<div class="section">
+    <label for="apikey">API Key</label>
+    <input type="text" id="apikey" placeholder="Enter your API key">
+</div>
+
+<div class="section">
+    <label for="engine">Engine</label>
+    <select id="engine">
+        <option value="espeak">ESpeak (1 credit)</option>
+        <option value="piper">Piper (2 credits)</option>
+        <option value="kokoro">Kokoro (3 credits)</option>
+    </select>
+</div>
+
+<div class="section">
+    <label for="text">Text</label>
+    <textarea id="text" placeholder="Enter text to synthesize"></textarea>
+</div>
+
+<button onclick="synthesize()">Synthesize</button>
+
+<div id="status" class="section"></div>
+
+<div id="audioWrapper" class="audio-container"></div>
+
+<script>
+    async function synthesize() {
+        const key = document.getElementById("apikey").value.trim();
+        const engine = document.getElementById("engine").value;
+        const text = document.getElementById("text").value.trim();
+        const status = document.getElementById("status");
+        const audioWrapper = document.getElementById("audioWrapper");
+
+        status.textContent = "";
+        audioWrapper.innerHTML = "";
+
+        if (!key) {
+            status.textContent = "API key required.";
+            return;
+        }
+        if (!text) {
+            status.textContent = "Text cannot be empty.";
+            return;
+        }
+
+        const url = "http://localhost:8000/synthesize";  /* Replace with VPS URL in production */
+
+        try {
+            status.textContent = "Processing request...";
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + key,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text, engine })
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                status.textContent = "Error: " + err.detail;
+                return;
+            }
+
+            const blob = await response.blob();
+            const audioUrl = URL.createObjectURL(blob);
+
+            status.textContent = "Success. Audio ready.";
+
+            const audio = document.createElement("audio");
+            audio.controls = true;
+            audio.src = audioUrl;
+
+            const link = document.createElement("a");
+            link.href = audioUrl;
+            link.download = "tts_output.wav";
+            link.textContent = "Download audio file";
+
+            audioWrapper.appendChild(audio);
+            audioWrapper.appendChild(document.createElement("br"));
+            audioWrapper.appendChild(link);
+
+        } catch (e) {
+            status.textContent = "Unexpected error: " + e;
+        }
+    }
+</script>
+
+</body>
+</html>
