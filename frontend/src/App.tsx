@@ -1,13 +1,15 @@
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Tabs } from "./components/Tabs";
 import { Signup } from "./pages/Signup";
 import { Dashboard } from "./pages/Dashboard";
 import { Synthesize } from "./pages/Synthesize";
+import "./App.css";
 
 function App() {
   return (
     <Router>
-      <div style={{ maxWidth: 720, margin: "40px auto", fontFamily: "Arial, sans-serif" }}>
+      <div className="app-container">
         <h1>MindSnap TTS Client</h1>
         <Tabs />
         <Routes>
@@ -21,3 +23,4 @@ function App() {
 }
 
 export default App;
+

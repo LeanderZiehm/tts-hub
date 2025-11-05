@@ -1,0 +1,23 @@
+
+.synthesize-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.synthesize-container textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.audio-player {
+  margin-top: 20px;
+}
+
+.status-message {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+}

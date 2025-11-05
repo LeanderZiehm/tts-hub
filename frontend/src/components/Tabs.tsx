@@ -1,8 +1,12 @@
+
 import { NavLink } from "react-router-dom";
+import "./Tabs.css";
+import "./Tabs.css";
 
 export const Tabs = () => (
-  <nav style={{ marginBottom: 20 }}>
-    <NavLink to="/dashboard" style={{ marginRight: 10 }}>Dashboard</NavLink>
+  <nav className="tabs-nav">
+    <NavLink to="/dashboard">Dashboard</NavLink>
     <NavLink to="/synthesize">Synthesize</NavLink>
   </nav>
 );
+

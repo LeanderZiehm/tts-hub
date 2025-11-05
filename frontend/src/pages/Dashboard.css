@@ -1,0 +1,30 @@
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-section {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.api-key-section strong {
+  margin-right: 10px;
+}
+
+.credits-section strong {
+  margin-right: 10px;
+}
+
+.status-message {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #fff0f0;
+  border: 1px solid #ffcccc;
+  color: #d8000c;
+}

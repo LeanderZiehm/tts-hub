@@ -1,5 +1,8 @@
+
 import { useState } from "react";
 import { createUser } from "../api/client";
+import "./Signup.css";
+import "./Signup.css";
 
 export const Signup = () => {
   const [adminSecret, setAdminSecret] = useState("");
@@ -20,18 +23,19 @@ export const Signup = () => {
   };
 
   return (
-    <div>
+    <div className="signup-container">
       <h2>Create API User</h2>
       <input
-        type="text"
+        type="password"
         placeholder="Admin Secret"
         value={adminSecret}
         onChange={e => setAdminSecret(e.target.value)}
       />
       <button onClick={handleSignup}>Create User</button>
-      <div>{status}</div>
-      {apiKey && <div>API Key: {apiKey}</div>}
+      {status && <div className="status-message">{status}</div>}
+      {apiKey && <div className="api-key-display">API Key: {apiKey}</div>}
       {credits !== null && <div>Credits: {credits}</div>}
     </div>
   );
 };
+

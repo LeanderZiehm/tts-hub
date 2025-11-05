@@ -1,0 +1,25 @@
+
+.tabs-nav {
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.tabs-nav a {
+  margin-right: 20px;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tabs-nav a.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.tabs-nav a:not(.active):hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
